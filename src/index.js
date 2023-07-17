@@ -1,8 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import App from "./App";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import ErrorPage from "./Pages/Error";
 import Gotomarket from "./Pages/Gotomarket";
@@ -12,39 +12,26 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <App />,
-        errorElement: <ErrorPage />,
-        children: [
-            {
-                index: true,
-                element: <Home />,
-            },
-            {
-                path: "gotomarket",
-                element: <Gotomarket />,
-            },
-            {
-                path: "secretsanta",
-                element: <Secretsanta />,
-            },
-            {
-                path: "getreviews",
-                element: <Getreviews />,
-            },
-        ],
-    },
-]);
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
+ReactDOM.render(
     <React.StrictMode>
         <QueryClientProvider client={queryClient}>
-            <div className="min-h-screen bg-white dark:bg-gray-800">
-                <RouterProvider router={router} />
-            </div>
+            <Router>
+                <div className="min-h-screen bg-white dark:bg-gray-800">
+                    <Routes>
+                        <Route path="/" element={<App />}>
+                            <Route index element={<Home />} />
+                            <Route path="gotomarket" element={<Gotomarket />} />
+                            <Route
+                                path="secretsanta"
+                                element={<Secretsanta />}
+                            />
+                            <Route path="getreviews" element={<Getreviews />} />
+                        </Route>
+                        <Route path="*" element={<ErrorPage />} />
+                    </Routes>
+                </div>
+            </Router>
         </QueryClientProvider>
-    </React.StrictMode>
+    </React.StrictMode>,
+    document.getElementById("root")
 );
